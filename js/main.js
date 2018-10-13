@@ -1,232 +1,82 @@
-;(function () {
-	
-	'use strict';
+(function ($) {
+	"use strict"
 
-	var mobileMenuOutsideClick = function() {
-
-		$(document).click(function (e) {
-	    var container = $("#pari-offcanvas, .js-pari-nav-toggle");
-	    if (!container.is(e.target) && container.has(e.target).length === 0) {
-
-	    	if ( $('body').hasClass('offcanvas') ) {
-
-    			$('body').removeClass('offcanvas');
-    			$('.js-pari-nav-toggle').removeClass('active');
-	    	}
-	    }
-		});
-
-	};
-
-
-	var offcanvasMenu = function() {
-
-		$('#page').prepend('<div id="pari-offcanvas" />');
-		$('#page').prepend('<a href="#" class="js-pari-nav-toggle pari-nav-toggle pari-nav-white"><i></i></a>');
-		var clone1 = $('.menu-1 > ul').clone();
-		$('#pari-offcanvas').append(clone1);
-		var clone2 = $('.menu-2 > ul').clone();
-		$('#pari-offcanvas').append(clone2);
-
-		$('#pari-offcanvas .has-dropdown').addClass('offcanvas-has-dropdown');
-		$('#pari-offcanvas')
-			.find('li')
-			.removeClass('has-dropdown');
-
-		// Hover dropdown menu on mobile
-		$('.offcanvas-has-dropdown').mouseenter(function(){
-			var $this = $(this);
-
-			$this
-				.addClass('active')
-				.find('ul')
-				.slideDown(500, 'easeOutExpo');				
-		}).mouseleave(function(){
-
-			var $this = $(this);
-			$this
-				.removeClass('active')
-				.find('ul')
-				.slideUp(500, 'easeOutExpo');				
-		});
-
-
-		$(window).resize(function(){
-
-			if ( $('body').hasClass('offcanvas') ) {
-
-    			$('body').removeClass('offcanvas');
-    			$('.js-pari-nav-toggle').removeClass('active');
-				
-	    	}
-		});
-	};
-
-
-	var burgerMenu = function() {
-
-		$('body').on('click', '.js-pari-nav-toggle', function(event){
-			var $this = $(this);
-
-
-			if ( $('body').hasClass('overflow offcanvas') ) {
-				$('body').removeClass('overflow offcanvas');
-			} else {
-				$('body').addClass('overflow offcanvas');
-			}
-			$this.toggleClass('active');
-			event.preventDefault();
-
-		});
-	};
-
-
-
-	var contentWayPoint = function() {
-		var i = 0;
-		$('.animate-box').waypoint( function( direction ) {
-
-			if( direction === 'down' && !$(this.element).hasClass('animated-fast') ) {
-				
-				i++;
-
-				$(this.element).addClass('item-animate');
-				setTimeout(function(){
-
-					$('body .animate-box.item-animate').each(function(k){
-						var el = $(this);
-						setTimeout( function () {
-							var effect = el.data('animate-effect');
-							if ( effect === 'fadeIn') {
-								el.addClass('fadeIn animated-fast');
-							} else if ( effect === 'fadeInLeft') {
-								el.addClass('fadeInLeft animated-fast');
-							} else if ( effect === 'fadeInRight') {
-								el.addClass('fadeInRight animated-fast');
-							} else {
-								el.addClass('fadeInUp animated-fast');
-							}
-
-							el.removeClass('item-animate');
-						},  k * 200, 'easeInOutExpo' );
-					});
-					
-				}, 100);
-				
-			}
-
-		} , { offset: '85%' } );
-	};
-
-
-	var dropdown = function() {
-
-		$('.has-dropdown').mouseenter(function(){
-
-			var $this = $(this);
-			$this
-				.find('.dropdown')
-				.css('display', 'block')
-				.addClass('animated-fast fadeInUpMenu');
-
-		}).mouseleave(function(){
-			var $this = $(this);
-
-			$this
-				.find('.dropdown')
-				.css('display', 'none')
-				.removeClass('animated-fast fadeInUpMenu');
-		});
-
-	};
-
-
-	var testimonialCarousel = function(){
-		var owl = $('.owl-carousel-fullwidth');
-		owl.owlCarousel({
-			items: 1,
-			loop: true,
-			margin: 0,
-			responsiveClass: true,
-			nav: false,
-			dots: true,
-			smartSpeed: 800,
-			autoHeight: true,
-		});
-	};
-
-
-	var goToTop = function() {
-
-		$('.js-gotop').on('click', function(event){
-			
-			event.preventDefault();
-
-			$('html, body').animate({
-				scrollTop: $('html').offset().top
-			}, 500, 'easeInOutExpo');
-			
-			return false;
-		});
-
-		$(window).scroll(function(){
-
-			var $win = $(window);
-			if ($win.scrollTop() > 200) {
-				$('.js-top').addClass('active');
-			} else {
-				$('.js-top').removeClass('active');
-			}
-
-		});
-	
-	};
-
-
-	// Loading page
-	var loaderPage = function() {
-		$(".pari-loader").fadeOut("slow");
-	};
-
-	var counter = function() {
-		$('.js-counter').countTo({
-			 formatter: function (value, options) {
-	      return value.toFixed(options.decimals);
-	    },
-		});
-	};
-
-	var counterWayPoint = function() {
-		if ($('#pari-counter').length > 0 ) {
-			$('#pari-counter').waypoint( function( direction ) {
-										
-				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-					setTimeout( counter , 400);					
-					$(this.element).addClass('animated');
-				}
-			} , { offset: '90%' } );
-		}
-	};
-
-	// Parallax
-	var parallax = function() {
-		$(window).stellar();
-	};
-
-	
-	$(function(){
-		mobileMenuOutsideClick();
-		parallax();
-		offcanvasMenu();
-		burgerMenu();
-		contentWayPoint();
-		dropdown();
-		testimonialCarousel();
-		goToTop();
-		loaderPage();
-		counter();
-		counterWayPoint();
+	///////////////////////////
+	// Preloader
+	$(window).on('load', function () {
+		$("#preloader").delay(600).fadeOut();
 	});
 
+	///////////////////////////
+	// Scrollspy
+	$('body').scrollspy({
+		target: '#nav',
+		offset: $(window).height() / 2
+	});
 
-}());
+	///////////////////////////
+	// Smooth scroll
+	$("#nav .main-nav a[href^='#']").on('click', function (e) {
+		e.preventDefault();
+		var hash = this.hash;
+		$('html, body').animate({
+			scrollTop: $(this.hash).offset().top
+		}, 600);
+	});
+
+	$('#back-to-top').on('click', function () {
+		$('body,html').animate({
+			scrollTop: 0
+		}, 600);
+	});
+
+	///////////////////////////
+	// On Scroll
+	$(window).on('scroll', function () {
+		var wScroll = $(this).scrollTop();
+
+		// Fixed nav
+		wScroll > 1 ? $('#nav').addClass('fixed-nav') : $('#nav').removeClass('fixed-nav');
+
+		// Back To Top Appear
+		wScroll > 700 ? $('#back-to-top').fadeIn() : $('#back-to-top').fadeOut();
+	});
+
+})(jQuery);
+
+
+
+
+let ss_loveBox = document.getElementById('ss_loveBox');
+let hr_loveBox = document.getElementById('hr_loveBox');
+let dd_loveBox = document.getElementById('dd_loveBox');
+
+
+function computeAndUpdate() {
+	let whenItAllBegan = new Date(2016, 11, 8, 21, 30);
+	let millisecondsPassedWithLove = Date.now() - whenItAllBegan;
+	let secondsPassedWithLove = Math.ceil(millisecondsPassedWithLove / 1000);
+	let hoursPassedWithLove = Math.ceil(secondsPassedWithLove / 3600);
+	let daysPassedWithLove = Math.ceil(hoursPassedWithLove / 24);
+	dd_loveBox.innerHTML = daysPassedWithLove.toString() + (" " +" days which is");
+	hr_loveBox.innerHTML = hoursPassedWithLove + (" " +" hours which is");
+	ss_loveBox.innerHTML = secondsPassedWithLove.toString() + (" " +" seconds");
+
+	setInterval(computeAndUpdate, 1000);
+
+
+
+
+	let born = new Date(1995, 10, 22, 21, 30);
+	let millisecondsPassed = Date.now() - born;
+	let secondsPassed = Math.ceil(millisecondsPassed / 1000);
+	let hoursPassed = Math.ceil(secondsPassed / 3600);
+	let daysPassed = Math.ceil(hoursPassed / 24);
+	dd_born.innerHTML = daysPassed.toString() + (" " +" days which is");
+	hr_born.innerHTML = hoursPassed + (" " +" hours which is");
+	ss_born.innerHTML = secondsPassed.toString() + (" " +" seconds");
+
+	setInterval(computeAndUpdate, 1000);
+
+
+}
